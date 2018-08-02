@@ -196,8 +196,6 @@ class EntCitasSearch extends EntCitas
             'query' => $query,
             'pagination'=>[
                 'pageSize' => 30,
-                
-                
             ],
             
             'sort' => [
