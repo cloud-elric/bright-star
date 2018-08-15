@@ -70,6 +70,10 @@ class EntCitas extends \yii\db\ActiveRecord
     public $btnAprobarAdministradorTelcel = "<a href='#'  class='btn btn-success js-aprobar-a-telcel'>Aprobar</a>";
     public $isEdicion = "0";
 
+    const TIPO_ENVIO_LOCAL =1;
+    const DIAS_ENTREGA_LOCAL = 1;
+    const DIAS_ENTREGA_FORANEO = 3;
+
 
     public function getConsecutivo()
     {
@@ -824,5 +828,41 @@ class EntCitas extends \yii\db\ActiveRecord
         return $pathMes;
 
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            // Place your custom code here
+            $this->validarDiaEntregaEnviador();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function validarDiaEntregaEnviador(){
+       
+        $tipoEnvio = $this->idMunicipio ? $this->idMunicipio->id_tipo:null;
+        $diasAntes = self::DIAS_ENTREGA_FORANEO;
+        if($tipoEnvio == self::TIPO_ENVIO_LOCAL){
+            $diasAntes = self::DIAS_ENTREGA_LOCAL;
+        }
+
+        $dia = Calendario::getDayName($this->fch_cita);
+
+        if ($dia <=$diasAntes) {
+            $diasAntes = $diasAntes + 2;
+        }
+
+
+        $tiempo = strtotime($this->fch_cita . "-".$diasAntes." day");
+        $this->fch_entrega_equipo = date('Y-m-d H:i:s', $tiempo);
+
+        return $this->fch_entrega_equipo;
+    }
+
 
 }
