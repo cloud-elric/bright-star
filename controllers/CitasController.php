@@ -973,6 +973,162 @@ class CitasController extends Controller
         ];
     }
 
+    public function setHeadersCsvB()
+    {
+
+
+        return [
+            "Identificador único", "Número celular", "Identificador de envio", "Area", "Tipo / Zona",
+            "Frecuencia", "Trámite", "En", "Calle", "Colonia", "Municipio", "Estado", "C.P.", "Entre calles", "Referencias", "Fza Vta", "Captura",
+            "CitaOrig", "HoraOrig", "EstatusCita", "IntentosEntrega", "EstatusEntrega", "Cliente", "SAP Equipo", "Equipo", "IMEI",
+            "SAP ICCID", "ICCID", "SAP Promocional 1", "Promocional", "SAP Promocional 2", "Promocional 2", "SAP Promocional 3", "Promocional 3", "SAP Promocional 4",
+            "Promocional 4", "SAP Promocional 5", "Promocional 5", "TPV", "Fecha entrega B"
+        ];
+    }
+
+    public function actionDownloadDataCitasEnvio(){
+       
+
+        $modelSearch = new EntCitasSearch();
+        $dataProvider = $modelSearch->searchExport(Yii::$app->request->queryParams);
+
+        if (Yii::$app->request->isGet) :
+            //The name of the CSV file that will be downloaded by the user.
+        $fileName = 'Reporte.csv';
+        $data = [];
+        $data[0] = $this->setHeadersCsvB();
+        foreach ($dataProvider->getModels() as $key => $modelo) :
+
+            $intentos = 0;
+        if ($modelo->idEnvio) :
+
+            if ($modelo->idEnvio->txt_historial_api) :
+            $json = json_decode($modelo->idEnvio->txt_historial_api);
+
+        if (isset($json->History)) :
+            foreach ($json->History as $llave => $historial) :
+            if ($historial->EventoClave == 11) {
+            $intentos++;
+        }
+        if ($historial->EventoClave == 12) {
+            $intentos++;
+        }
+
+        if ($historial->EventoClave == 5) {
+            $intentos++;
+        }
+        endforeach;
+        endif;
+
+        endif;
+
+        endif;
+
+        $estatusEntrega = "";
+        if ($modelo->idStatus) {
+            if ($modelo->idStatus->txt_identificador_api) {
+                $estatusEntrega = $modelo->idStatus->txt_nombre;
+            }
+        }
+
+        $horario = "";
+        if ($modelo->b_entrega_cat && $modelo->id_cat) {
+            $horario = $modelo->txt_horario_entrega_cat;
+        } else {
+            $horario = $modelo->idHorario ? $modelo->idHorario->txt_hora_inicial . " - " . $modelo->idHorario->txt_hora_final : "";
+        }
+
+        $cac = "DOMICILIO";
+        if ($modelo->b_entrega_cat && $modelo->id_cat) {
+            $cac = "CAC - " . $modelo->idCat->txt_nombre;
+        } else if ($modelo->b_entrega_cat) {
+            $cac = "CAC - ";
+        }
+
+        $data[$modelo->id_cita] = [
+            $modelo->txt_identificador_cliente,
+            $modelo->txt_telefono,
+            $modelo->idEnvio ? $modelo->idEnvio->txt_tracking : '',
+            $modelo->idArea ? $modelo->idArea->txt_nombre : '',
+            $modelo->idMunicipio ? $modelo->idMunicipio->idTipo->txt_nombre : '',
+            $modelo->idMunicipio ? $modelo->idMunicipio->diasServicio : "",
+            $modelo->idTipoTramite->txt_nombre,
+            $cac,
+            $modelo->txt_calle_numero,
+            $modelo->txt_colonia,
+            $modelo->txt_municipio,
+            $modelo->txt_estado,
+            $modelo->txt_codigo_postal,
+            $modelo->txt_entre_calles,
+            $modelo->txt_observaciones_punto_referencia,
+            $modelo->idCallCenter ? $modelo->idCallCenter->txt_nombre : '',
+            Utils::changeFormatDateInputShort($modelo->fch_creacion),
+            Utils::changeFormatDateInputShort($modelo->fch_cita),
+            $horario,
+            $modelo->txt_autorizado_por,
+            $intentos,
+            $estatusEntrega,
+
+            $modelo->nombreCompleto,
+            $modelo->txt_sap_equipo,
+            $modelo->txt_equipo,
+            "'" . $modelo->txt_imei,
+            $modelo->txt_sap_iccid,
+            "'" . $modelo->txt_iccid,
+            $modelo->txt_sap_promocional,
+            $modelo->txt_promocional,
+            $modelo->txt_sap_promocional_2,
+            $modelo->txt_promocional_2,
+            $modelo->txt_sap_promocional_3,
+            $modelo->txt_promocional_3,
+            $modelo->txt_sap_promocional_4,
+            $modelo->txt_promocional_4,
+            $modelo->txt_sap_promocional_5,
+            $modelo->txt_promocional_5,
+            $modelo->txt_tpv,
+            Utils::changeFormatDateInputShort($modelo->fch_entrega_equipo),
+
+
+        ];
+
+        $historico = [];
+
+
+        $data[$modelo->id_cita] = array_merge($data[$modelo->id_cita], $historico);
+
+        endforeach;
+
+            // print_r($historico);
+            // exit;
+            
+
+            
+            //Set the Content-Type and Content-Disposition headers.
+
+        header('Content-Type: application/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+    
+            //Open up a PHP output stream using the function fopen.
+        $fp = fopen('php://output', 'w');
+        //add BOM to fix UTF-8 in Excel
+        fputs($fp, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));
+        
+            //Loop through the array containing our CSV data.
+        foreach ($data as $row) {
+            //fputcsv formats the array into a CSV format.
+            //It then writes the result to our output stream.
+            fputcsv($fp, $row);
+        }
+    
+            //Close the file handle.
+        fclose($fp);
+        exit;
+        endif;
+
+        return $this->render("exportar", ["dataProvider" => $dataProvider, "modelSearch" => $modelSearch]);
+    
+    }
+
     public function actionDownloadDataCitas()
     {
 
