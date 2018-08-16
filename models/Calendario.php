@@ -6,6 +6,21 @@ use Yii;
 class Calendario
 {
 
+    public static function getNumeroDiaSemana($string=null)
+    {
+        // Inicializamos la fecha y hora actual
+        $tiempo = time();
+        if($string){
+            $tiempo = strtotime($string);
+        }
+        
+            $fecha = date('N', $tiempo);
+        
+
+       
+        return $fecha;
+    }
+
     public static function getDayName($string=null)
     {
         // Inicializamos la fecha y hora actual

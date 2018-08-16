@@ -185,6 +185,32 @@ class CitasController extends Controller
         ]);
     }
 
+    public function actionValidarFechaEntrega($token=null){
+        $respuesta = new ResponseServices();
+        if (\Yii::$app->user->can(Constantes::USUARIO_ADMINISTRADOR_TELCEL)) {
+            $model = EntCitas::find()->where(['txt_token' => $token])->one();
+
+            if($model->fch_entrega_equipo){
+                $datetime1 = new \DateTime(Calendario::getFechaActual());
+                $datetime2 = new \DateTime($model->fch_entrega_equipo);
+                $interval = $datetime1->diff($datetime2);
+                $numeroDias = $interval->format('%a');
+    
+                if($numeroDias>0){
+                    $respuesta->status = "success";
+                }
+            }else{
+                $respuesta->status = "success";
+            }
+            
+
+        }else{
+            $respuesta->status = "success";
+        }
+
+        return $respuesta;
+    }
+
 
 
     /**
@@ -1129,6 +1155,18 @@ class CitasController extends Controller
     
     }
 
+    public function setHeadersCsv()
+    {
+        return [
+            "Identificador único", "Número celular", "Identificador de envio", "Tipo / Zona",
+            "Frecuencia", "Trámite", "En", "Fza Vta", "Captura",
+            "CitaOrig", "HoraOrig", "EstatusCita", "IntentosEntrega", "EstatusEntrega", "Cliente", "Equipo", "IMEI",
+            "ICCID", "Promocional", "Promocional 2", "Promocional 3", "Promocional 4", "Promocional 5", "TPV", "Calle y número", "Colonia", "Municipio",
+            "Estado", "C.P.", "Referencias", "Fecha de Entregado", "FECHA_1", "HORA_1", "NOTA_1", "EXCEPCION_1", "Operador", "FECHA_2", "NOTA_2", "EXCEPCION_2",
+            "Operador", "FECHA_3", "NOTA_3", "EXCEPCION_3", "Operador", "Fecha de solicitud de devolución", "Motivo de devolucion", "Excepción final", "Fecha de excepción final"
+        ];
+    }
+
     public function actionDownloadDataCitas()
     {
 
@@ -1187,6 +1225,96 @@ class CitasController extends Controller
             } else if ($modelo->b_entrega_cat) {
                 $cac = "CAC - ";
             }
+
+            $fechaEntrega = "";
+            $fecha1 = "";
+            $hora1 = "";
+            $nota1 = "";
+            $exepcion1 = "";
+            $operador = "";
+            $fecha2 = "";
+            $nota2 = "";
+            $excepcion2 = "";
+            $operador2 = "";
+            $fecha3 = "";
+            $nota3 = "";
+            $excepcion3 = "";
+            $operador3 = "";
+            $fchSolicitudDevolucion = "";
+            $motivoDevolucion = "";
+            $excepcionFinal = "";
+            $fechaExcepcionFinal = "";
+
+            if ($modelo->idEnvio) {
+            
+                if ($modelo->idEnvio->txt_historial_api) {
+                    $json = json_decode($modelo->idEnvio->txt_historial_api);
+                
+                    if (isset($json->History)) {
+                        foreach ($json->History as $llave => $historial){
+
+                            // Si ya esta entregado
+                            if ($historial->EventoClave == Constantes::STATUS_API_ENTREGADO) {
+                                $fechaEntrega = $historial->Fecha;
+                                if($intentos==1){
+                                    $fecha1 = Calendario::getDateSimple($historial->Fecha);
+                                    $hora1 = Calendario::getHoursMinutes($historial->Fecha);
+                                    $nota1 = $historial->Comentario;
+                                }
+
+                                if($intentos==2){
+                                    $fecha2 = Calendario::getDateSimple($historial->Fecha);
+                                    $nota2 = $historial->Comentario;
+                                    $excepcion2 = $historial->Evento;
+                                }
+
+                                if($intentos==3){
+                                    $fecha3 = Calendario::getDateSimple($historial->Fecha);
+                                    $nota3 = $historial->Comentario;
+                                    $excepcion3 = $historial->Evento;
+                                }
+                            }
+
+                            // Si es primera visita
+                            if($historial->EventoClave == Constantes::STATUS_API_PRIMERA_VISITA){
+                                $fecha1 = Calendario::getDateSimple($historial->Fecha);
+                                $hora1 = Calendario::getHoursMinutes($historial->Fecha);
+                                $nota1 = $historial->Comentario;
+                                $exepcion1 = $historial->Evento;
+                            }
+
+                            // Si es segunda visita
+                            if($historial->EventoClave == Constantes::STATUS_API_SEGUNDA_VISITA){
+                                $fecha2 = Calendario::getDateSimple($historial->Fecha);
+                                $nota2 = $historial->Comentario;
+                                $exepcion2 = $historial->Evento;
+                            }
+
+                            if($historial->EventoClave== Constantes::STATUS_API_DEVOLUCION_EN_TRANSITO){
+                                $fchSolicitudDevolucion = Calendario::getDateSimple($historial->Fecha);
+                                $motivoDevolucion = $historial->Comentario;
+                            }
+
+                            
+                        }
+                    }
+    
+                }
+
+                if($modelo->idEnvio->txt_respuesta_api){
+                    $eventoFinal = json_decode($modelo->idEnvio->txt_respuesta_api);
+                
+                    if (isset($eventoFinal->Response)) {
+                        if($eventoFinal->ClaveEvento==Constantes::STATUS_API_ENTREGADO || $eventoFinal->ClaveEvento==Constantes::STATUS_API_DEVUELTO || $eventoFinal->ClaveEvento==Constantes::STATUS_API_INCIDENCIA){
+                            $excepcionFinal = $eventoFinal->Evento;
+                            $fechaExcepcionFinal = Calendario::getDateSimple($eventoFinal->Fecha);
+                        }
+                    }
+                }
+    
+            }
+        
+
         $data[$modelo->id_cita] = [
             $modelo->txt_identificador_cliente,
             $modelo->txt_telefono,
@@ -1218,36 +1346,37 @@ class CitasController extends Controller
             $modelo->txt_municipio,
             $modelo->txt_estado,
             $modelo->txt_codigo_postal,
-            $modelo->txt_entre_calles
+            $modelo->txt_entre_calles,
+            $fechaEntrega,
+            $fecha1,
+            $hora1,
+            $nota1,
+            $exepcion1,
+            $operador,
+            $fecha2,
+            $nota2,
+            $excepcion2,
+            $operador2,
+            $fecha3,
+            $nota3,
+            $excepcion3,
+            $operador3,
+            $fchSolicitudDevolucion,
+            $motivoDevolucion,
+            $excepcionFinal,
+            $fechaExcepcionFinal,
         ];
 
-        $historico = [];
-        if ($modelo->idEnvio) :
-            $i = 30;
-        if ($modelo->idEnvio->txt_historial_api) :
-            $json = json_decode($modelo->idEnvio->txt_historial_api);
-        $countEvento = 1;
-        if (isset($json->History)) :
-            foreach ($json->History as $llave => $historial) :
-            if ($historial->EventoClave > 3) {
-            $data[0][++$i] = "Evento #" . $countEvento;
-            $historico[] = $historial->Evento;
-            $data[0][++$i] = "Comentario #" . $countEvento;
-            $historico[] = $historial->Comentario;
-            $data[0][++$i] = "Motivo #" . $countEvento;
-            $historico[] = $historial->Motivo;
-            $data[0][++$i] = "Fecha #" . $countEvento;
-            $historico[] = $historial->Fecha;
-            $countEvento++;
-        }
-        endforeach;
-        endif;
+        // "Identificador único", "Número celular", "Identificador de envio", "Tipo / Zona",
+        //     "Frecuencia", "Trámite", "En", "Fza Vta", "Captura",
+        //     "CitaOrig", "HoraOrig", "EstatusCita", "IntentosEntrega", "EstatusEntrega", "Cliente", "Equipo", "IMEI",
+        //     "ICCID", "Promocional", "Promocional 2", "Promocional 3", "Promocional 4", "Promocional 5", "TPV", "Calle y número", "Colonia", "Municipio",
+        //     "Estado", "C.P.", "Referencias", "Fecha de Entregado", "FECHA_1", "HORA_1", "NOTA_1", "EXCEPCION_1", "Operador", "FECHA_2", "NOTA_2", "EXCEPCION_2",
+        //     "Operador", "FECHA_3", "NOTA_3", "EXCEPCION_3", "Operador", "Fecha de solicitud de devolución", "Motivo de devolucion", "Excepción final", "Fecha de excepción final"
 
-        endif;
-
-        endif;
-
-        $data[$modelo->id_cita] = array_merge($data[$modelo->id_cita], $historico);
+        
+       
+        
 
         endforeach;
 
@@ -1280,16 +1409,7 @@ class CitasController extends Controller
         return $this->render("exportar", ["dataProvider" => $dataProvider, "modelSearch" => $modelSearch]);
     }
 
-    public function setHeadersCsv()
-    {
-        return [
-            "Identificador único", "Número celular", "Identificador de envio", "Tipo / Zona",
-            "Frecuencia", "Trámite", "En", "Fza Vta", "Captura",
-            "CitaOrig", "HoraOrig", "EstatusCita", "IntentosEntrega", "EstatusEntrega", "Cliente", "Equipo", "IMEI",
-            "ICCID", "Promocional", "Promocional 2", "Promocional 3", "Promocional 4", "Promocional 5", "TPV", "Calle y número", "Colonia", "Municipio",
-            "Estado", "C.P.", "Referencias"
-        ];
-    }
+   
 
     /**
      * Actualiza el envio
