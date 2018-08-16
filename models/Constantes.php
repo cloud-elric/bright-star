@@ -60,6 +60,23 @@ class Constantes{
     const COLOR_STATUS_CANCELADA = "danger";
     const COLOR_STATUS_AUTORIZADA_POR_ADMINISTRADOR_TELCEL = "green";
 
+    // Estatus del api
+    const STATUS_API_CREACION = 1;
+    const STATUS_API_RECIBIO_MENSAJERIA = 2;
+    const STATUS_API_LISTO_ENTREGA = 3;
+    const STATUS_API_ANOMALO = 4;
+    const STATUS_API_ENTREGADO = 5;
+    const STATUS_API_CANCELADO = 6;
+    const STATUS_API_NO_ENTREGADO = 7;
+    const STATUS_API_NO_VISITADO = 10;
+    const STATUS_API_PRIMERA_VISITA = 11;
+    const STATUS_API_SEGUNDA_VISITA = 12;
+    const STATUS_API_DEVOLUCION_EN_TRANSITO = 13;
+    const STATUS_API_DEVUELTO = 14;
+    const STATUS_API_INCIDENCIA = 15;
+    const STATUS_API_REPROGRAMACION = 16;
+    const STATUS_API_NO_ASIGNADO = 17;
+
     // Tiempo que se puede editar una cita
     const TIEMPO_EDICION = 2;
 

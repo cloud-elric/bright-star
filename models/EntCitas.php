@@ -623,8 +623,6 @@ class EntCitas extends \yii\db\ActiveRecord
         return $this->hasMany(EntHistorialCambiosCitas::className(), ['id_cita' => 'id_cita'])->orderBy('fch_modificacion DESC');
     }
 
-   
-
     public static function validarDiaEntrega($fecha)
     {
 
@@ -845,13 +843,14 @@ class EntCitas extends \yii\db\ActiveRecord
 
     public function validarDiaEntregaEnviador(){
        
+
         $tipoEnvio = $this->idMunicipio ? $this->idMunicipio->id_tipo:null;
         $diasAntes = self::DIAS_ENTREGA_FORANEO;
         if($tipoEnvio == self::TIPO_ENVIO_LOCAL){
             $diasAntes = self::DIAS_ENTREGA_LOCAL;
         }
 
-        $dia = Calendario::getDayName($this->fch_cita);
+        $dia = Calendario::getNumeroDiaSemana($this->fch_cita);
 
         if ($dia <=$diasAntes) {
             $diasAntes = $diasAntes + 2;

@@ -209,6 +209,37 @@ if(\Yii::$app->user->can(Constantes::USUARIO_SUPERVISOR)){
 if(\Yii::$app->user->can(Constantes::USUARIO_SUPERVISOR)){
     $this->registerJs(
     '
+
+    function validarFechaEntrega(){
+        $.ajax({
+            url:baseUrl+"citas/validar-fecha-entrega?token='.$model->txt_token.'",
+            success:function(r){
+                if(r.status=="error"){
+                    swal("Espera", "La fecha de la entrega de equipo es menor al día de hoy. Actualice la fecha de la cita", "warning");
+                }else{
+                    swal({
+                        title: "¿Estas seguro de aprobar esta cita?",
+                        text: "Al autorizar se guardaran los campos modificados",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonClass: "btn-warning",
+                        confirmButtonText: "Sí, aprobar cita",
+                        cancelButtonText: "No, revisaré una vez más",
+                        closeOnConfirm: true,
+                        //closeOnCancel: false
+                    },
+                    function() {
+                        
+                        $("#form-cita").submit();
+                        return false;
+                    });
+                }
+            },error:function(){
+                swal("Esperar", "Ocurrio un error en el servidor", "error");     
+            }
+        });
+    }
+
     $(document).ready(function(){
 
         $("#form-cita").on("afterValidate", function(e, messages, errorAttributes){
@@ -232,22 +263,10 @@ if(\Yii::$app->user->can(Constantes::USUARIO_SUPERVISOR)){
         $(".js-aprobar").on("click", function(e){
             e.preventDefault();
             $("#entcitas-isedicion").val(0);
-            swal({
-                title: "¿Estas seguro de aprobar esta cita?",
-                text: "Al autorizar se guardaran los campos modificados",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonClass: "btn-warning",
-                confirmButtonText: "Sí, aprobar cita",
-                cancelButtonText: "No, revisaré una vez más",
-                closeOnConfirm: true,
-                //closeOnCancel: false
-            },
-            function() {
-                
-                $("#form-cita").submit();
-                return false;
-            });
+
+
+            validarFechaEntrega();
+            
                         
             
             
