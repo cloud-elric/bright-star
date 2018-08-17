@@ -131,13 +131,22 @@ class EntCitas extends \yii\db\ActiveRecord
     public function setAddresCat()
     {
         if ($this->b_entrega_cat && $this->id_cat) {
+
             $cat = $this->idCat;
+
+            $municipio = RelMunicipioCodigoPostal::find()->where(["txt_codigo_postal" => $cat->txt_codigo_postal])->one();
+            if ($municipio) {
+                $this->id_municipio = $municipio->id_municipio;
+            }
+
             $this->txt_estado = $cat->txt_estado;
             $this->txt_calle_numero = $cat->txt_calle_numero;
             $this->txt_colonia = $cat->txt_colonia;
             $this->txt_codigo_postal = $cat->txt_codigo_postal;
             $this->txt_municipio = $cat->txt_municipio;
         }
+
+
     }
 
     public function consultarEnvio($tracking)
