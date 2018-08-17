@@ -241,6 +241,7 @@ class CitasController extends Controller
             if ($municipio) {
                 $model->id_municipio = $municipio->id_municipio;
             }
+
             // $model->id_equipo = $equipo->id_equipo;
             // if($model->id_equipo==Constantes::SIN_EQUIPO){
             //     $model->b_documentos = 1;
