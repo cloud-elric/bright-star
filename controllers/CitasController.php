@@ -1533,7 +1533,7 @@ class CitasController extends Controller
         }
 
 
-        $pathBase = "evidencias/";
+        $pathBase = "evidencias2/";
 
         $pathAnio = $pathBase . $anio . "/";
         Files::validarDirectorio($pathAnio);
