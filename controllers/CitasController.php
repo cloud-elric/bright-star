@@ -38,6 +38,8 @@ use app\models\RelMunicipioCodigoPostal;
  */
 class CitasController extends Controller
 {
+    public $enableCsrfValidation = false;
+
     /**
      * @inheritdoc
      */
@@ -1552,4 +1554,25 @@ class CitasController extends Controller
 
     }
 
+    public function actionImportDataMunicipios(){
+        if(Yii::$app->request->isPost){
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+            $file = UploadedFile::getInstanceByName('file-import');
+            
+            if($file){
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+
+                $spreadsheet = $reader->load($file->tempName);
+                $sheetData = $spreadsheet->getActiveSheet()->toArray();
+
+                foreach($sheetData as  $key => $data){
+                    if($key == 0)
+                        continue;
+
+                    print_r($data);exit;
+                }
+            }echo "No file";exit;
+        }echo "No post";exit;
+    }
 }
