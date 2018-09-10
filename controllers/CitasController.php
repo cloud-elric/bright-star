@@ -32,12 +32,15 @@ use app\models\Calendario;
 use app\models\CatCallsCenters;
 use app\models\CatEquipos;
 use app\models\RelMunicipioCodigoPostal;
+use app\models\CatMunicipios;
 
 /**
  * CitasController implements the CRUD actions for EntCitas model.
  */
 class CitasController extends Controller
 {
+    public $enableCsrfValidation = false;
+
     /**
      * @inheritdoc
      */
@@ -1552,4 +1555,62 @@ class CitasController extends Controller
 
     }
 
+    public function actionImportDataMunicipios(){
+
+        if(Yii::$app->request->isPost){
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+            $file = UploadedFile::getInstanceByName('file-import');
+            
+            if($file){
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+
+                $spreadsheet = $reader->load($file->tempName);
+                $sheetData = $spreadsheet->getActiveSheet()->toArray();
+
+                foreach($sheetData as  $key => $data){
+                    if($key == 0)
+                        continue;
+
+                    
+                    $mun = CatMunicipios::find()->where(['id_municipio'=>$data[0]])->one();
+                    if($mun){
+                        $mun->id_tipo = $data[2];
+                        $mun->id_area = $data[3];
+                        $mun->b_lunes = $data[4];
+                        $mun->b_martes = $data[5];
+                        $mun->b_miercoles = $data[6];
+                        $mun->b_jueves = $data[7];
+                        $mun->b_viernes = $data[8];
+                        $mun->b_sabado = $data[9];
+                        $mun->b_domingo = $data[10];
+
+                        if(!$mun->save()){
+                            return [
+                                'status' => 'error',
+                                'message' => 'No se guardaron los datos del municipio'
+                            ];
+                        }
+                    }else{
+                        return [
+                            'status' => 'error',
+                            'message' => 'No existe el municipio'
+                        ];
+                    }
+                }
+
+                return [
+                    'status' => 'success'
+                ];
+            }else{
+
+                return [
+                    'status' => 'error',
+                    'message' => 'No hay archivo'
+                ];
+            }
+        }
+
+        return $this->render('datos_mun');
+    }
 }
