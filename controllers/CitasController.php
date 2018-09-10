@@ -1556,6 +1556,7 @@ class CitasController extends Controller
     }
 
     public function actionImportDataMunicipios(){
+
         if(Yii::$app->request->isPost){
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
@@ -1608,12 +1609,8 @@ class CitasController extends Controller
                     'message' => 'No hay archivo'
                 ];
             }
-        }else{
-
-            return [
-                'status' => 'error',
-                'message' => 'No hay datos por post'
-            ];
         }
+
+        return $this->render('datos_mun');
     }
 }
