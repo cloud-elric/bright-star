@@ -32,6 +32,7 @@ use app\models\Calendario;
 use app\models\CatCallsCenters;
 use app\models\CatEquipos;
 use app\models\RelMunicipioCodigoPostal;
+use app\models\CatMunicipios;
 
 /**
  * CitasController implements the CRUD actions for EntCitas model.
@@ -1570,9 +1571,49 @@ class CitasController extends Controller
                     if($key == 0)
                         continue;
 
-                    print_r($data);exit;
+                    
+                    $mun = CatMunicipios::find()->where(['id_municipio'=>$data[0]])->one();
+                    if($mun){
+                        $mun->id_tipo = $data[2];
+                        $mun->id_area = $data[3];
+                        $mun->b_lunes = $data[4];
+                        $mun->b_martes = $data[5];
+                        $mun->b_miercoles = $data[6];
+                        $mun->b_jueves = $data[7];
+                        $mun->b_viernes = $data[8];
+                        $mun->b_sabado = $data[9];
+                        $mun->b_domingo = $data[10];
+
+                        if(!$mun->save()){
+                            return [
+                                'status' => 'error',
+                                'message' => 'No se guardaron los datos del municipio'
+                            ];
+                        }
+                    }else{
+                        return [
+                            'status' => 'error',
+                            'message' => 'No existe el municipio'
+                        ];
+                    }
                 }
-            }echo "No file";exit;
-        }echo "No post";exit;
+
+                return [
+                    'status' => 'success'
+                ];
+            }else{
+
+                return [
+                    'status' => 'error',
+                    'message' => 'No hay archivo'
+                ];
+            }
+        }else{
+
+            return [
+                'status' => 'error',
+                'message' => 'No hay datos por post'
+            ];
+        }
     }
 }
