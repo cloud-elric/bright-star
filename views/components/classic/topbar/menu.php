@@ -75,6 +75,15 @@ $usuario = EntUsuarios::getUsuarioLogueado();
                           </span>
                         </a>
                       </li>
+
+                      <li class="site-menu-item">
+                        <a class="animsition-link" href="<?=Url::base()?>/citas/import-data-municipios">
+                          <span class="site-menu-title">
+                            <i class="site-menu-icon pe-7s-upload" aria-hidden="true"></i>
+                            Datos municipios
+                          </span>
+                        </a>
+                      </li>
                       <?php
                       }
                       ?>
