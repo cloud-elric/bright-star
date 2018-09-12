@@ -69,6 +69,7 @@ class EntCitas extends \yii\db\ActiveRecord
     public $btnAprobarSupervisorTelcel = "<a href='#'  class='btn btn-success js-aprobar-s-telcel'>Aprobar</a>";
     public $btnAprobarAdministradorTelcel = "<a href='#'  class='btn btn-success js-aprobar-a-telcel'>Aprobar</a>";
     public $isEdicion = "0";
+    public $startDateEntrega;
 
     const TIPO_ENVIO_LOCAL =1;
     const DIAS_ENTREGA_LOCAL = 1;
@@ -524,7 +525,8 @@ class EntCitas extends \yii\db\ActiveRecord
             'txt_sap_promocional_5'=>"Clave SAP promocional #5",
             'txt_sap_equipo'=>"SAP equipo",
             'txt_sap_iccid'=>"SAP ICCID",
-            "txt_motivo_rechazo"=>"Motivo de rechazo"
+            "txt_motivo_rechazo"=>"Motivo de rechazo",
+            'startDateEntrega' => 'Fecha de entrega' 
         ];
     }
 
