@@ -1555,6 +1555,13 @@ class CitasController extends Controller
 
     }
 
+    public function actionGenerarEnvio(){
+        $citas = EntCitas::find()->where([
+            "id_status"=>7, 
+            
+            ])->andWhere(["is", "id_envio" ,null])->all();
+    }
+
     public function actionImportDataMunicipios(){
 
         if(Yii::$app->request->isPost){
