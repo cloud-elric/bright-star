@@ -372,13 +372,13 @@ class EntCitasSearch extends EntCitas
 
         }
 
-        if($this->startDateEntrega&& $this->endDateEntrega ){
+        if($this->startDateEntrega /*&& $this->endDateEntrega*/ ){
             $this->startDateEntrega  = Utils::changeFormatDateInputShort($this->startDateEntrega );
             $this->endDateEntrega  = Utils::changeFormatDateInputShort($this->endDateEntrega );
             $query->andFilterWhere([
-                "between", "date_format(fch_entrega_equipo, '%Y-%m-%d')",$this->startDateEntrega , $this->endDateEntrega
-            
-            ]);
+                
+                "=","date_format(fch_entrega_equipo, '%Y-%m-%d')",$this->startDateEntrega
+            ]);//"between", "date_format(fch_entrega_equipo, '%Y-%m-%d')",$this->startDateEntrega , $this->endDateEntrega
 
         }
 
