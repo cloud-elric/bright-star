@@ -291,6 +291,7 @@ $usuarioLogueado = EntUsuarios::getUsuarioLogueado();
                     Subir evidencia
                     <?php
                     $ubicacionArchivo = $cita->pathBaseEvidencia.$cita->txt_telefono.".pdf";
+                    
                     $token = false;
                     if(Files::existeArchivo($ubicacionArchivo)){
                         $token = $cita->txt_identificador_cliente;

@@ -825,6 +825,12 @@ class EntCitas extends \yii\db\ActiveRecord
 
     public function getPathBaseEvidencia(){
         $pathBase = "evidencias/";
+        $mesCambio = Calendario::getMonthNumber($this->fch_cita);
+        if($mesCambio>=8){
+            $pathBase = "evidencias2/";
+        }
+       
+ 
         $anio = Calendario::getYearLastDigit($this->fch_cita);
         $pathAnio = $pathBase.$anio."/";
         Files::validarDirectorio($pathAnio);
