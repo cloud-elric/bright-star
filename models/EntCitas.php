@@ -105,6 +105,7 @@ class EntCitas extends \yii\db\ActiveRecord
 
     public function generarNumeroEnvio()
     {
+        
         $apiEnvio = new H2H();
         $respuestaApi = json_decode($apiEnvio->crearEnvio($this));
         if(isset($respuestaApi->NoTracking)){

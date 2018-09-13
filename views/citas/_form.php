@@ -104,6 +104,7 @@ $cat = $model->idCat;
         <div class="col-sm-3 col-md-3">
             <?= $form->field($model, 'txt_rfc')->textInput(['maxlength' => true]) ?>
             <?= $form->field($model, 'isEdicion')->hiddenInput(['maxlength' => true])->label(false) ?>
+            <?= $form->field($model, 'fch_creacion')->hiddenInput(['maxlength' => true])->label(false) ?>
         </div>
         <div class="col-sm-3 col-md-3">
             <?= $form->field($model, 'txt_email')->textInput(['maxlength' => true]) ?>
@@ -536,7 +537,8 @@ $cat = $model->idCat;
                     'depends'=>['entcitas-fch_cita', 'entcitas-id_area'],
                     'params'=>[
                         'entcitas-id_area',
-                        'entcitas-fch_cita'
+                        'entcitas-fch_cita',
+                        'entcitas-fch_creacion',
                     ],  
                     'loadingText' => 'Cargando horarios ...',
                     
@@ -569,7 +571,8 @@ $cat = $model->idCat;
                     'depends'=>['entcitas-id_cat', 'entcitas-fch_cita'],
                     'params'=>[
                         'entcitas-id_cat',
-                        'entcitas-fch_cita'
+                        'entcitas-fch_cita',
+
                     ],  
                     'loadingText' => 'Cargando horarios ...',
                     

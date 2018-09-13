@@ -38,7 +38,7 @@ var formatRepo = function (repo) {
     '<div class="col-md-12">' +
         '<b style="margin-left:5px">' + repo.text + '</b>' + 
     '</div>' +
-    '<div class="col-md-4">' + cantidadDisponible + '</div>' +
+    // '<div class="col-md-4">' + cantidadDisponible + '</div>' +
 '</div>';
     
     return '<div style="overflow:hidden;">' + markup + '</div>';
