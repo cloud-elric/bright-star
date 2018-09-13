@@ -220,6 +220,7 @@ class HorariosAreasController extends Controller
     public function actionGetHorariosDisponibilidadByArea($horario = null){
         $respuesta = new ResponseServices();
         $out = [];
+        $validarCupo = true;
 
         if (isset($_POST['depdrop_all_params']['entcitas-id_area']) &&
             isset($_POST['depdrop_all_params']['entcitas-fch_cita'])) {
@@ -227,6 +228,7 @@ class HorariosAreasController extends Controller
             $id = $_POST['depdrop_all_params']['entcitas-id_area'];
             $fecha = $_POST['depdrop_all_params']['entcitas-fch_cita'];
             $tipoEntrega = 1;//Default standard
+            $fechaCreacion = $_POST['depdrop_all_params']['entcitas-fch_creacion'];
 
             if(!$fecha){
                 echo Json::encode(['output' => $out, 'selected'=>'']);
@@ -259,12 +261,23 @@ class HorariosAreasController extends Controller
                             'cantidad'=>''];
                         
                     }else{
-                        if(($disponibilidad['num_disponibles']-$horariosOcupados)>0){
+                        if((!$fechaCreacion) && $validarCupo){
+                            if(($disponibilidad['num_disponibles']-$horariosOcupados)>0){
+                                $out[] = [
+                                    'id' => $disponibilidad['id_horario_area'], 
+                                    'name' => $disponibilidad['txt_hora_inicial']." - ".$disponibilidad['txt_hora_final'],
+                                    'cantidad'=>$disponibilidad['num_disponibles']-$horariosOcupados];
+                            }
+                        }else{
                             $out[] = [
                                 'id' => $disponibilidad['id_horario_area'], 
                                 'name' => $disponibilidad['txt_hora_inicial']." - ".$disponibilidad['txt_hora_final'],
                                 'cantidad'=>$disponibilidad['num_disponibles']-$horariosOcupados];
                         }
+
+                        
+
+
                     }    
 
                     if ($i == 0) {
