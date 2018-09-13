@@ -357,7 +357,7 @@ $this->registerJsFile(
     <div class="citas-cont">
         <div class="row">
             <div class="col-md-12">
-                <h5 class="panel-title">Exportar citas por rango de fecha (Por fecha de entrega de equipo a bright star)</h5>
+                <h5 class="panel-title">Exportar citas por fecha (Fecha de entrega de equipo a bright star)</h5>
                 <hr>
             </div>
         </div>
@@ -370,13 +370,13 @@ $this->registerJsFile(
                     echo DatePicker::widget([
                         'model' => $modelSearch,
                         'attribute' => 'startDateEntrega',
-                        'attribute2' => 'endDateEntrega',
-                        'options' => ['placeholder' => 'Fecha inicio', "id"=>"ne3"],
-                        'options2' => ['placeholder' => 'Fecha final', "id"=>"new4"],
+                        //'attribute2' => 'endDateEntrega',
+                        'options' => ['placeholder' => 'Fecha de entrega', "id"=>"ne3"],
+                        //'options2' => ['placeholder' => 'Fecha final', "id"=>"new4"],
                         
-                        'type' => DatePicker::TYPE_RANGE,
+                        'type' => DatePicker::TYPE_INPUT,
                         'form' => $form,
-                        'separator' => '<i class="icon  fa-arrows-h"></i>',
+                        //'separator' => '<i class="icon  fa-arrows-h"></i>',
                         
                         'pluginOptions' => [
                             'format' => 'dd-mm-yyyy',
