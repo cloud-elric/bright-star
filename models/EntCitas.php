@@ -109,8 +109,14 @@ class EntCitas extends \yii\db\ActiveRecord
         
         $apiEnvio = new H2H();
         $respuestaApi = json_decode($apiEnvio->crearEnvio($this));
+
+
+       
         if(isset($respuestaApi->NoTracking)){
             $tracking = $respuestaApi->NoTracking;
+        }else{
+            print_r($respuestaApi);
+            exit;
         }
        
         $envio = new EntEnvios();
@@ -122,6 +128,7 @@ class EntCitas extends \yii\db\ActiveRecord
             $this->id_envio = $envio->id_envio;
         }
 
+        return $apiEnvio;
 
     }
 
