@@ -24,6 +24,9 @@ $this->registerJsFile(
     <?php $form = ActiveForm::begin([
         'errorCssClass'=>"has-danger",
         'action'=>'download-data',
+        'options'=>[
+            'target'=>"_blank",
+           ],
         'method'=>"GET",
         'id'=>'form-search',
         'fieldConfig' => [

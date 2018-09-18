@@ -967,7 +967,20 @@ class CitasController extends Controller
 
         header('Content-Type: application/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
-    
+        header("Cache-Control: no-store, no-cache");
+
+        $nameTemporal = Utils::generateToken("exp_").".csv";
+        $pathTemporal = "temporales/".$nameTemporal;
+
+        $df = fopen($pathTemporal, 'w');
+        fprintf($df, chr(0xEF).chr(0xBB).chr(0xBF));
+        foreach ($data as $row) {
+            fputcsv($df, $row);
+        }
+        readfile($pathTemporal);
+        Files::borrarArchivo($pathTemporal);
+        exit;
+
             //Open up a PHP output stream using the function fopen.
         $fp = fopen('php://output', 'w');
         //add BOM to fix UTF-8 in Excel
@@ -1128,15 +1141,21 @@ class CitasController extends Controller
 
         endforeach;
 
-            // print_r($historico);
-            // exit;
-            
-
-            
-            //Set the Content-Type and Content-Disposition headers.
-
         header('Content-Type: application/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
+        header("Cache-Control: no-store, no-cache");
+
+        $nameTemporal = Utils::generateToken("exp_").".csv";
+        $pathTemporal = "temporales/".$nameTemporal;
+
+        $df = fopen($pathTemporal, 'w');
+        fprintf($df, chr(0xEF).chr(0xBB).chr(0xBF));
+        foreach ($data as $row) {
+            fputcsv($df, $row);
+        }
+        readfile($pathTemporal);
+        Files::borrarArchivo($pathTemporal);
+        exit;
     
             //Open up a PHP output stream using the function fopen.
         $fp = fopen('php://output', 'w');
@@ -1384,15 +1403,21 @@ class CitasController extends Controller
 
         endforeach;
 
-            // print_r($historico);
-            // exit;
-            
-
-            
-            //Set the Content-Type and Content-Disposition headers.
-
         header('Content-Type: application/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
+        header("Cache-Control: no-store, no-cache");
+
+        $nameTemporal = Utils::generateToken("exp_").".csv";
+        $pathTemporal = "temporales/".$nameTemporal;
+
+        $df = fopen($pathTemporal, 'w');
+        fprintf($df, chr(0xEF).chr(0xBB).chr(0xBF));
+        foreach ($data as $row) {
+            fputcsv($df, $row);
+        }
+        readfile($pathTemporal);
+        Files::borrarArchivo($pathTemporal);
+        exit;
     
             //Open up a PHP output stream using the function fopen.
         $fp = fopen('php://output', 'w');
@@ -1556,10 +1581,22 @@ class CitasController extends Controller
     }
 
     public function actionGenerarEnvio(){
-        $citas = EntCitas::find()->where([
-            "id_status"=>7, 
+
+        
+
+        $cita= EntCitas::find()->where([
+            "txt_token"=>"cit_08e0f73f277753556b4ddb516381bc1e5ba0ff87e1e6e", 
             
-            ])->andWhere(["is", "id_envio" ,null])->all();
+            ])->andWhere(["is", "id_envio" ,null])->one();
+
+            $r = $cita->generarNumeroEnvio();  
+            print_r($r->getParamsCrear());
+            
+        
+        $cita->save();
+
+        echo "Finissh";
+        exit;
     }
 
     public function actionImportDataMunicipios(){
