@@ -1,7 +1,7 @@
 <?php
 namespace app\models;
 
-class H2H
+class H2H2
 {
 
     const URL_API = "https://h2hls.azurewebsites.net/System/Brightstar";

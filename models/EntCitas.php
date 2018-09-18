@@ -110,11 +110,10 @@ class EntCitas extends \yii\db\ActiveRecord
         $apiEnvio = new H2H();
         $respuestaApi = json_decode($apiEnvio->crearEnvio($this));
 
-
-       
         if(isset($respuestaApi->NoTracking)){
             $tracking = $respuestaApi->NoTracking;
         }else{
+            echo "Error al generar numero de trancking";
             print_r($respuestaApi);
             exit;
         }
@@ -859,7 +858,7 @@ class EntCitas extends \yii\db\ActiveRecord
     {
         if (parent::beforeSave($insert)) {
             // Place your custom code here
-            $this->validarDiaEntregaEnviador();
+            //$this->validarDiaEntregaEnviador();
             return true;
         } else {
             return false;
