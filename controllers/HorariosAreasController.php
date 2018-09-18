@@ -15,6 +15,8 @@ use app\models\Calendario;
 use app\modules\ModUsuarios\models\Utils;
 use app\models\ResponseServices;
 use app\models\CatCats;
+use app\models\CatAreas;
+use yii\web\HttpException;
 
 /**
  * HorariosAreasController implements the CRUD actions for EntHorariosAreas model.
@@ -42,12 +44,10 @@ class HorariosAreasController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new EntHorariosAreasSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $areas = CatAreas::find()->where(["b_habilitado"=>1])->all();
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            "areas"=>$areas
         ]);
     }
 
@@ -295,5 +295,22 @@ class HorariosAreasController extends Controller
         echo Json::encode(['output' => $out, 'selected'=>'']);
         
 
+    }
+
+    public function actionUpdateCupo($token=null){
+        $disponibilidad = EntHorariosAreas::find()->where(["id_horario_area"=>$token])->one();
+
+        if(!$disponibilidad){
+            throw new HttpException(404, "No se encontro el registro en la base de datos");
+        }
+
+        if(isset($_POST["cupo"]) && $_POST["cupo"]){
+            $disponibilidad->num_disponibles = $_POST["cupo"];
+            if(!$disponibilidad->save()){
+                throw new HttpException(500, "No se pudo guardar el registro");
+            }
+        }else{
+            throw new HttpException(500, "No se enviaron los datos de la manera correcta. Falto el parametro CUPO y debe de ser enviado por POST");
+        }
     }
 }

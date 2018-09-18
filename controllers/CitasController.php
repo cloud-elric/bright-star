@@ -849,7 +849,8 @@ class CitasController extends Controller
 
     public function actionDownloadData()
     {
-
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 600);
         $modelSearch = new EntCitasSearch();
         $dataProvider = $modelSearch->searchExport(Yii::$app->request->queryParams);
 
@@ -1031,7 +1032,8 @@ class CitasController extends Controller
 
     public function actionDownloadDataCitasEnvio(){
        
-
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 600);
         $modelSearch = new EntCitasSearch();
         $dataProvider = $modelSearch->searchExport(Yii::$app->request->queryParams);
 
@@ -1192,7 +1194,8 @@ class CitasController extends Controller
 
     public function actionDownloadDataCitas()
     {
-
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 600);
         $modelSearch = new EntCitasSearch();
         $dataProvider = $modelSearch->searchExport(Yii::$app->request->queryParams);
 
@@ -1580,23 +1583,24 @@ class CitasController extends Controller
 
     }
 
-    public function actionGenerarEnvio(){
-
-        
+    public function actionGenerarEnvio($cita=null){
+	    
 
         $cita= EntCitas::find()->where([
-            "txt_token"=>"cit_08e0f73f277753556b4ddb516381bc1e5ba0ff87e1e6e", 
+            "txt_token"=>$cita, 
             
             ])->andWhere(["is", "id_envio" ,null])->one();
 
-            $r = $cita->generarNumeroEnvio();  
-            print_r($r->getParamsCrear());
+            if(!$cita){
+                echo "Cita no encontrada";
+            }
+
+
+            $r = $cita->generarNumeroEnvio2();  
             
         
         $cita->save();
 
-        echo "Finissh";
-        exit;
     }
 
     public function actionImportDataMunicipios(){

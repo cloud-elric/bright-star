@@ -83,6 +83,6 @@ class CatAreas extends \yii\db\ActiveRecord
      */
     public function getEntHorariosAreas()
     {
-        return $this->hasMany(EntHorariosAreas::className(), ['id_area' => 'id_area']);
+        return $this->hasMany(EntHorariosAreas::className(), ['id_area' => 'id_area'])->orderBy("id_dia");
     }
 }
