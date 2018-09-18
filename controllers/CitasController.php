@@ -850,6 +850,7 @@ class CitasController extends Controller
     public function actionDownloadData()
     {
         ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 600);
         $modelSearch = new EntCitasSearch();
         $dataProvider = $modelSearch->searchExport(Yii::$app->request->queryParams);
 
@@ -1032,6 +1033,7 @@ class CitasController extends Controller
     public function actionDownloadDataCitasEnvio(){
        
         ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 600);
         $modelSearch = new EntCitasSearch();
         $dataProvider = $modelSearch->searchExport(Yii::$app->request->queryParams);
 
@@ -1193,6 +1195,7 @@ class CitasController extends Controller
     public function actionDownloadDataCitas()
     {
         ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 600);
         $modelSearch = new EntCitasSearch();
         $dataProvider = $modelSearch->searchExport(Yii::$app->request->queryParams);
 
