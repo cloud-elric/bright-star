@@ -6,6 +6,8 @@ use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\JsExpression;
+//use kartik\widgets\TimePicker;
+use kartik\time\TimePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\EntCodigoPostalDisponibilidad */
@@ -64,7 +66,7 @@ use yii\web\JsExpression;
 
     <?= $form->field($model, 'num_dia')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'txt_hora_inicial')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'txt_hora_inicial')->widget(TimePicker::classname(),['name' => 'txt_hora_inicial']) ?>
 
     <?= $form->field($model, 'txt_hora_final')->textInput(['maxlength' => true]) ?>
 
