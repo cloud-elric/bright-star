@@ -7,8 +7,6 @@ use yii\widgets\DetailView;
 /* @var $model app\models\EntCodigoPostalDisponibilidad */
 
 $this->title = $model->txt_codigo_postal;
-$this->params['breadcrumbs'][] = ['label' => 'Codigo postal disponibilidads', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ent-codigo-postal-disponibilidad-view">
 

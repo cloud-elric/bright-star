@@ -32,8 +32,6 @@ $this->registerJsFile(
   '@web/webAssets/js/usuarios/index.js',
   ['depends' => [\app\assets\AppAsset::className()]]
 );
-
-
 ?>
 
     

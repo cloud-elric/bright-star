@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\components\AccessControlExtend;
+use app\models\ResponseServices;
 
 /**
  * CodigoPostalDisponibilidadController implements the CRUD actions for EntCodigoPostalDisponibilidad model.
@@ -132,5 +133,39 @@ class CodigoPostalDisponibilidadController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionBloquearCp($id = null){
+        $response = new ResponseServices();
+
+        if($id){
+            $cp = $this->findModel($id);
+            $cp->b_habilitado = 0;
+
+            if($cp->save()){
+                $response->status = "success";
+                $response->message = "Se bloqueo correctamente";
+                
+                return $response;
+            }
+        }
+        return $response;
+    }
+
+    public function actionActivarCp($id = null){
+        $response = new ResponseServices();
+
+        if($id){
+            $cp = $this->findModel($id);
+            $cp->b_habilitado = 1;
+
+            if($cp->save()){
+                $response->status = "success";
+                $response->message = "Se activo correctamente";
+
+                return $response;
+            }
+        }
+        return $response;
     }
 }
