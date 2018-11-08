@@ -168,4 +168,46 @@ class CodigoPostalDisponibilidadController extends Controller
         }
         return $response;
     }
+
+    public function actionCrearDisponibilidad(){
+
+        if(isset($_POST['EntCodigoPostalDisponibilidad']['txt_codigo_postal']) && isset($_POST['EntCodigoPostalDisponibilidad']['txt_hora_inicial']) && isset($_POST['EntCodigoPostalDisponibilidad']['txt_hora_final']) && isset($_POST['dias'])){
+            
+            //buscar codigos postales en tabla y eliminar
+            $cps = EntCodigoPostalDisponibilidad::find();
+            
+            $dias = explode(',', $_POST['dias']);
+            $transaction = Yii::$app->db->beginTransaction();
+            foreach($dias as $dia){
+                try {
+                    $model = new EntCodigoPostalDisponibilidad();
+                    $model->txt_codigo_postal = $_POST['EntCodigoPostalDisponibilidad']['txt_codigo_postal'];
+                    $model->txt_hora_inicial = $_POST['EntCodigoPostalDisponibilidad']['txt_hora_inicial'];
+                    $model->txt_hora_final = $_POST['EntCodigoPostalDisponibilidad']['txt_hora_final'];
+                    $model->num_dia = $dia;
+
+                    if(!$model->save()){
+                        $transaction->rollBack();
+                        $response = new ResponseServices();
+                        $response->status = 'error';
+
+                        return $response;
+                    }
+                }catch(Exception $e) {
+                    $transaction->rollBack();
+                    $response = new ResponseServices();
+                    $response->status = 'error';
+
+                    return $response;
+                } 
+            }
+            $transaction->commit();
+            
+            return $this->redirect(['index']);
+        }
+        $response = new ResponseServices();
+        $response->status = 'error';
+
+        return $response;
+    }
 }
