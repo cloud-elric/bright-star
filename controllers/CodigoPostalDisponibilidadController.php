@@ -172,12 +172,6 @@ class CodigoPostalDisponibilidadController extends Controller
     public function actionCrearDisponibilidad(){
 
         if(isset($_POST['EntCodigoPostalDisponibilidad']['txt_codigo_postal']) && isset($_POST['EntCodigoPostalDisponibilidad']['txt_hora_inicial']) && isset($_POST['EntCodigoPostalDisponibilidad']['txt_hora_final']) && isset($_POST['dias'])){
-            
-            // //buscar codigos postales en tabla y eliminar
-            // $cps = EntCodigoPostalDisponibilidad::find()->where(['txt_codigo_postal'=>$_POST['EntCodigoPostalDisponibilidad']['txt_codigo_postal']])->all();
-            // foreach($cps as $cp){
-            //     $cp->delete();
-            // }
 
             $dias = explode(',', $_POST['dias']);
             $transaction = Yii::$app->db->beginTransaction();

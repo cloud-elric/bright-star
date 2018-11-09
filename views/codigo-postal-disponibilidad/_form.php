@@ -189,7 +189,7 @@ use yii\web\View;
         </div>
 
         <div class="col-md-6 input-group">
-            <?= $form->field($model, 'txt_hora_final')->textInput(['class'=>'time', 'data-container'=>"#addNewEvent"]) ?>
+            <?= $form->field($model, 'txt_hora_final')->textInput(['class'=>'time', 'data-container'=>"#addNewEvent2"]) ?>
             <span class="input-group-addon">
                 <i class="icon wb-time" aria-hidden="true"></i>
             </span>

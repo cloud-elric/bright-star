@@ -4,10 +4,21 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\Url;
 use app\modules\ModUsuarios\models\EntUsuarios;
+use yii\web\View;
+use app\assets\AppAsset;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\EntCodigoPostalDisponibilidadSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+
+$this->registerJsFile(
+    'https://rawgit.com/jonthornton/jquery-timepicker/master/jquery.timepicker.min.js',
+    ['depends' => [AppAsset::className()]]
+);
+$this->registerCssFile(
+    'https://rawgit.com/jonthornton/jquery-timepicker/master/jquery.timepicker.css',
+    ['depends' => [AppAsset::className()]]
+);
 
 $this->registerJsFile(
     '@web/webAssets/js/disponibilidad/index.js',
@@ -46,13 +57,26 @@ $this->title = 'Codigo Postal Disponibilidad';
             ],
             [
                 'attribute' => 'num_dia',
+                'filter'=>[0=>'Domingo', 1=>'Lunes', 2=>'Martes', 3=>'Miercoles', 4=>'Jueves', 5=>'Viernes', 6=>'Sabado'],
                 'format' => 'raw',
                 'value' => function($data){
                     return $data->getDiasSemana();
                 }
             ],
-            'txt_hora_inicial',
-            'txt_hora_final',
+            [
+                'attribute' => 'txt_hora_inicial',
+                'filterInputOptions' => [
+                    'class' => 'form-control time'
+                ],
+            ],
+            [
+                'attribute' => 'txt_hora_final',
+                'filterInputOptions' => [
+                    'class' => 'form-control time'
+                ],
+            ],
+            // 'txt_hora_inicial',
+            // 'txt_hora_final',
             // 'b_habilitado',
             [
                 'attribute' => 'b_habilitado',
@@ -81,3 +105,18 @@ $this->title = 'Codigo Postal Disponibilidad';
         ],
     ]); ?>
 </div>
+
+<?php
+$this->registerJs('
+    $(document).ready(function() {
+        console.log("dsssdsdssdsd");
+        $(".time").timepicker({
+            "timeFormat": "H:i",
+            "minTime": "6:00",
+            "maxTime": "23:00",
+        });
+    });
+',
+View::POS_END
+);
+?>

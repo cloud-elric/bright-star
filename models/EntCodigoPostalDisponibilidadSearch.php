@@ -18,7 +18,7 @@ class EntCodigoPostalDisponibilidadSearch extends EntCodigoPostalDisponibilidad
     public function rules()
     {
         return [
-            [['id_disponiblidad', 'num_dia', 'b_habilitado'], 'integer'],
+            [['id_disponiblidad', 'id_municipio', 'num_dia', 'b_habilitado'], 'integer'],
             [['txt_codigo_postal', 'txt_hora_inicial', 'txt_hora_final'], 'safe'],
         ];
     }
@@ -41,7 +41,7 @@ class EntCodigoPostalDisponibilidadSearch extends EntCodigoPostalDisponibilidad
      */
     public function search($params)
     {
-        $query = EntCodigoPostalDisponibilidad::find();
+        $query = EntCodigoPostalDisponibilidad::find()->leftJoin('relMunicipio');
 
         // add conditions that should always apply here
 

@@ -51,14 +51,9 @@ $this->registerJsFile(
     ['depends' => [AppAsset::className()]]
 );
 
-$this->title = 'Update Ent Codigo Postal Disponibilidad: ' . $model->id_disponiblidad;
-$this->params['breadcrumbs'][] = ['label' => 'Ent Codigo Postal Disponibilidads', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id_disponiblidad, 'url' => ['view', 'id' => $model->id_disponiblidad]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Codigo postal disponibilidad: ' . $model->txt_codigo_postal;
 ?>
 <div class="ent-codigo-postal-disponibilidad-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
         'model' => $model,
