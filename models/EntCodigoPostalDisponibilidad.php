@@ -62,4 +62,10 @@ class EntCodigoPostalDisponibilidad extends \yii\db\ActiveRecord
     {
         return $this->hasOne(CatCodigosPostales::className(), ['txt_codigo_postal' => 'txt_codigo_postal']);
     }
+
+    public function getDiasSemana(){
+        $arrayDias = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
+
+        return $arrayDias[$this->num_dia];
+    }
 }

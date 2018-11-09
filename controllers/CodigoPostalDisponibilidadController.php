@@ -173,9 +173,12 @@ class CodigoPostalDisponibilidadController extends Controller
 
         if(isset($_POST['EntCodigoPostalDisponibilidad']['txt_codigo_postal']) && isset($_POST['EntCodigoPostalDisponibilidad']['txt_hora_inicial']) && isset($_POST['EntCodigoPostalDisponibilidad']['txt_hora_final']) && isset($_POST['dias'])){
             
-            //buscar codigos postales en tabla y eliminar
-            $cps = EntCodigoPostalDisponibilidad::find();
-            
+            // //buscar codigos postales en tabla y eliminar
+            // $cps = EntCodigoPostalDisponibilidad::find()->where(['txt_codigo_postal'=>$_POST['EntCodigoPostalDisponibilidad']['txt_codigo_postal']])->all();
+            // foreach($cps as $cp){
+            //     $cp->delete();
+            // }
+
             $dias = explode(',', $_POST['dias']);
             $transaction = Yii::$app->db->beginTransaction();
             foreach($dias as $dia){
@@ -209,5 +212,16 @@ class CodigoPostalDisponibilidadController extends Controller
         $response->status = 'error';
 
         return $response;
+    }
+
+    public function actionDeleteCp($id = null){
+        if($id){
+            $cp = $this->findModel($id);
+            if($cp){
+                if($cp->delete()){
+                    return $this->redirect(['index']);
+                }
+            }
+        }
     }
 }

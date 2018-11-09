@@ -44,7 +44,13 @@ $this->title = 'Codigo Postal Disponibilidad';
                     );
                 }
             ],
-            'num_dia',
+            [
+                'attribute' => 'num_dia',
+                'format' => 'raw',
+                'value' => function($data){
+                    return $data->getDiasSemana();
+                }
+            ],
             'txt_hora_inicial',
             'txt_hora_final',
             // 'b_habilitado',

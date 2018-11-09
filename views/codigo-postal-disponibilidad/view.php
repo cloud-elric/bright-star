@@ -2,9 +2,16 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\helpers\Url;
+use app\assets\AppAsset;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\EntCodigoPostalDisponibilidad */
+
+$this->registerJsFile(
+    '@web/webAssets/js/disponibilidad/view.js',
+    ['depends' => [AppAsset::className()]]
+);
 
 $this->title = $model->txt_codigo_postal;
 ?>
@@ -14,12 +21,10 @@ $this->title = $model->txt_codigo_postal;
 
     <p>
         <?= Html::a('Editar', ['update', 'id' => $model->id_disponiblidad], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Eliminar', ['delete', 'id' => $model->id_disponiblidad], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
+        <?= Html::button('Eliminar', [
+            'class' => 'btn btn-danger js-eliminar-disponibilidad',
+            'data-id' => $model->id_disponiblidad,
+            'data-url' => Url::base()
         ]) ?>
     </p>
 
@@ -28,7 +33,13 @@ $this->title = $model->txt_codigo_postal;
         'attributes' => [
             // 'id_disponiblidad',
             'txt_codigo_postal',
-            'num_dia',
+            [
+                'attribute' => 'num_dia',
+                'format' => 'raw',
+                'value' => function($data){
+                    return $data->getDiasSemana();
+                }
+            ],
             'txt_hora_inicial',
             'txt_hora_final',
             // 'b_habilitado',
