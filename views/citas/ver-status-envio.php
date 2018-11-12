@@ -131,10 +131,10 @@ $usuarioLogueado = EntUsuarios::getUsuarioLogueado();
                             <?php
                                 if(isset($historico->History)){
                                     usort($historico->History, function($a, $b) { return strtotime($b->Fecha) - strtotime($a->Fecha); });
-                                    $localizaciones = [];
+                                    $localizaciones = null;
                                     $index = count($historico->Images)-1;
                                     foreach($historico->History as $key=>$historial):
-                                        $localizaciones[] = (isset($historial->Geolocation) && $historial->Geolocation)?$historial->Geolocation:null;
+                                        $localizaciones = (isset($historial->Geolocation) && $historial->Geolocation)?$historial->Geolocation:null;
                             ?>
                                 <tr>
                                     <td>
@@ -181,9 +181,20 @@ $usuarioLogueado = EntUsuarios::getUsuarioLogueado();
                                     </td>
                                     <td>
                                         <?php 
-                                            if(isset($localizaciones[$key])){
+                                            if($localizaciones){
+
                                                 
-                                                $coordenadas = explode("|" , $localizaciones[$key]);
+                                                if (strpos($localizaciones, ',') !== false) {
+                                                    $coordenadas = explode("," , $localizaciones);
+                                                    
+                                                }else if (strpos($localizaciones, '|') !== false) {
+                                                    $coordenadas = explode("|" , $localizaciones);
+                                                    
+                                                }else{
+                                                    $coordenadas = [0,0];
+                                                }
+                                                
+                                                
 
                                                 $latitud = $coordenadas[0];
                                                 $longitud = $coordenadas[1];
@@ -223,8 +234,16 @@ $usuarioLogueado = EntUsuarios::getUsuarioLogueado();
                     <h5>Mapa</h5>
                     <?php 
                         if($respuestaApi->Position){
+
+                            if (strpos($respuestaApi->Position, ',') !== false) {
+                                $coordenadas = explode("," , $respuestaApi->Position);
+                            }else if (strpos($respuestaApi->Position, '|') !== false) {
+                                $coordenadas = explode("|" , $respuestaApi->Position);
+                                
+                            }else{
+                                $coordenadas = [0,0];
+                            }
                             
-                            $coordenadas = explode("|" , $respuestaApi->Position);
 
                             $latitud = $coordenadas[0];
                             $longitud = $coordenadas[1];

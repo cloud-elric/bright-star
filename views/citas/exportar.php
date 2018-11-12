@@ -6,7 +6,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 $this->title = 'Exportar datos';
 $this->params['classBody'] = "site-navbar-small site-menubar-hide";
-
+$startDate = Calendario::changeFormatDateInputShortStart(Calendario::getFechaActual());
 
 $this->registerJsFile(
     '@web/webAssets/js/citas/exportar.js',
@@ -26,6 +26,7 @@ $this->registerJsFile(
         'action'=>'download-data',
         'options'=>[
             'target'=>"_blank",
+            "autocomplete"=>"off"
            ],
         'method'=>"GET",
         'id'=>'form-search',
@@ -85,6 +86,7 @@ $this->registerJsFile(
         'errorCssClass'=>"has-danger",
        'options'=>[
         'target'=>"_blank",
+        "autocomplete"=>"off"
        ],
         'action'=>'download-data',
         'method'=>"GET",
@@ -145,6 +147,7 @@ $this->registerJsFile(
         'errorCssClass'=>"has-danger",
        'options'=>[
         'target'=>"_blank",
+        "autocomplete"=>"off"
        ],
         'action'=>'download-data',
         'method'=>"GET",
@@ -183,7 +186,7 @@ $this->registerJsFile(
                         'pluginOptions' => [
                             'format' => 'dd-mm-yyyy',
                             'autoclose' => true,
-                           
+                            'startDate'=> $startDate,
                             'maxViewMode'=>2
                         ],
                        ]);
@@ -212,6 +215,7 @@ $this->registerJsFile(
         'errorCssClass'=>"has-danger",
        'options'=>[
         'target'=>"_blank",
+        "autocomplete"=>"off"
        ],
         'action'=>'download-data',
         'method'=>"GET",
@@ -250,7 +254,7 @@ $this->registerJsFile(
                         'pluginOptions' => [
                             'format' => 'dd-mm-yyyy',
                             'autoclose' => true,
-                           
+                            'startDate'=> $startDate,
                             'maxViewMode'=>2
                         ],
                        ]);
@@ -279,6 +283,7 @@ $this->registerJsFile(
         'errorCssClass'=>"has-danger",
        'options'=>[
         'target'=>"_blank",
+        "autocomplete"=>"off"
        ],
         'action'=>'download-data-citas',
         'method'=>"GET",
@@ -317,7 +322,8 @@ $this->registerJsFile(
                         'pluginOptions' => [
                             'format' => 'dd-mm-yyyy',
                             'autoclose' => true,
-                           
+                            'startDate'=> $startDate,
+                            //'endDate'=> date('Y-m-d', strtotime()),
                             'maxViewMode'=>2
                         ],
                        ]);
@@ -346,6 +352,7 @@ $this->registerJsFile(
         'errorCssClass'=>"has-danger",
        'options'=>[
         'target'=>"_blank",
+        "autocomplete"=>"off"
        ],
         'action'=>'download-data-citas-envio',
         'method'=>"GET",
@@ -384,7 +391,7 @@ $this->registerJsFile(
                         'pluginOptions' => [
                             'format' => 'dd-mm-yyyy',
                             'autoclose' => true,
-                           
+                            
                             'maxViewMode'=>2
                         ],
                        ]);
