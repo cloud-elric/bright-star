@@ -80,9 +80,9 @@ class EntCodigoPostalDisponibilidadSearch extends EntCodigoPostalDisponibilidad
         // grid filtering conditions
         $query->andFilterWhere([
             'id_disponiblidad' => $this->id_disponiblidad,
-            'id_municipio' => $this->id_municipio,
-            'id_area' => $this->id_area,
-            'id_horario' => $this->id_horario,
+            'ent_codigo_postal_disponibilidad.id_municipio' => $this->id_municipio,
+            'ent_codigo_postal_disponibilidad.id_area' => $this->id_area,
+            'ent_codigo_postal_disponibilidad.id_horario' => $this->id_horario,
             'ent_horarios_areas.id_dia' => $this->num_dia,
             'ent_codigo_postal_disponibilidad.b_habilitado' => $this->b_habilitado,
         ]);
