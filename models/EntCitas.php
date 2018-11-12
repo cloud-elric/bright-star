@@ -222,7 +222,7 @@ class EntCitas extends \yii\db\ActiveRecord
             $this->id_call_center = $usuario->id_call_center;
         }
 
-        if (YII_ENV_DEV) {
+        if (false) {
             $this->txt_telefono = "1234567890";
             $this->txt_nombre = "John";
             $this->txt_apellido_paterno = "Doe";

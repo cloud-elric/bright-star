@@ -539,6 +539,7 @@ $cat = $model->idCat;
                         'entcitas-id_area',
                         'entcitas-fch_cita',
                         'entcitas-fch_creacion',
+                        'entcitas-txt_codigo_postal',
                     ],  
                     'loadingText' => 'Cargando horarios ...',
                     

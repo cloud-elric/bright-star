@@ -17,6 +17,8 @@ use app\models\ResponseServices;
 use app\models\CatCats;
 use app\models\CatAreas;
 use yii\web\HttpException;
+use app\models\EntCodigoPostalDisponibilidad;
+use yii\helpers\ArrayHelper;
 
 /**
  * HorariosAreasController implements the CRUD actions for EntHorariosAreas model.
@@ -229,6 +231,7 @@ class HorariosAreasController extends Controller
             $fecha = $_POST['depdrop_all_params']['entcitas-fch_cita'];
             $tipoEntrega = 1;//Default standard
             $fechaCreacion = $_POST['depdrop_all_params']['entcitas-fch_creacion'];
+            $cp = $_POST['depdrop_all_params']['entcitas-txt_codigo_postal'];
 
             if(!$fecha){
                 echo Json::encode(['output' => $out, 'selected'=>'']);
@@ -241,10 +244,24 @@ class HorariosAreasController extends Controller
             if($tipoEntrega==2){
                 $list = EntHorariosAreas::find()->andWhere(['id_area'=>$id, 'id_dia'=>7])->asArray()->all();
             }else if($tipoEntrega==1){
-                $list = EntHorariosAreas::find()->andWhere(['id_area'=>$id, 'id_dia'=>$numDia])->asArray()->all();
+                $hd = EntCodigoPostalDisponibilidad::find()
+                ->select("id_horario")
+                ->where([
+                    "id_area"=>$id, 
+                    "b_habilitado"=>0,
+                    "txt_codigo_postal"=>$cp
+                ])->all();
+                $horariosDeshabilitados = [];
+                foreach($hd as $h){
+                    $horariosDeshabilitados[]=$h->id_horario;
+                }
+
+                $list = EntHorariosAreas::find()
+                ->andWhere(['id_area'=>$id, 'id_dia'=>$numDia])
+                 ->andWhere(["not in", "id_horario_area", $horariosDeshabilitados])
+                ->asArray()->all();
             }
 
-            
             $selected  = null;
             if ($id != null && count($list) > 0) {
                 $selected = '';

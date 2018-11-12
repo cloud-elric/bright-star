@@ -77,10 +77,10 @@ $usuario = EntUsuarios::getUsuarioLogueado();
                       </li>
 
                       <li class="site-menu-item">
-                        <a class="animsition-link" href="<?=Url::base()?>/citas/import-data-municipios">
+                        <a class="animsition-link" href="<?=Url::base()?>/codigo-postal-disponibilidad">
                           <span class="site-menu-title">
                             <i class="site-menu-icon pe-7s-upload" aria-hidden="true"></i>
-                            Datos municipios
+                              Habilitar horarios C.P.
                           </span>
                         </a>
                       </li>
