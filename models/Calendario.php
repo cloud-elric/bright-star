@@ -5,6 +5,20 @@ use Yii;
 
 class Calendario
 {
+    
+
+    public static function changeFormatDateInputShortStart($string=null, $days=30) {
+        $tiempo = time();
+        if($string){
+            $tiempo = strtotime($string." -30 days");
+        }
+        
+            $fecha = date('d-m-Y', $tiempo);
+        
+
+       
+        return $fecha;
+    }
 
     public static function getNumeroDiaSemana($string=null)
     {

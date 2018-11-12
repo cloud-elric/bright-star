@@ -19,6 +19,17 @@ use Yii;
  */
 class EntHorariosAreas extends \yii\db\ActiveRecord
 {
+
+    const DIAS = [
+        "1"=>"Lunes",
+        "2"=>"Martes",
+        "3"=>"Miercoles",
+        "4"=>"Jueves",
+        "5"=>"Viernes",
+        "6"=>"Sabado",
+        "7"=>"Domingo",
+    ];
+
     /**
      * @inheritdoc
      */
@@ -53,6 +64,40 @@ class EntHorariosAreas extends \yii\db\ActiveRecord
             'txt_hora_final' => 'Txt Hora Final',
             'num_disponibles' => 'Num Disponibles',
         ];
+    }
+
+    public function getHorarioConcat(){
+        return $this->txt_hora_inicial." - ".$this->txt_hora_final;
+    }
+
+    public function getDia(){
+        switch ($this->id_dia) {
+            case '1':
+                return "Lunes";
+                break;
+                case '2':
+                return "Martes";
+                break;
+                case '3':
+                return "Miercoles";
+                break;
+                case '4':
+                return "Jueves";
+                break;
+                case '5':
+                return "Viernes";
+                break;
+                case '6':
+                return "Sabado";
+                break;
+                case '7':
+                return "Domingo";
+                break;
+            
+            default:
+                # code...
+                break;
+        }
     }
 
     /**

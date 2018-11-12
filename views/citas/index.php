@@ -40,18 +40,9 @@ $this->registerJsFile(
 );
 
 ?>  
-
-<!-- <div class="row">
-    <div class="col-md-12 <?=\Yii::$app->user->can(Constantes::USUARIO_SUPERVISOR) || \Yii::$app->user->can(Constantes::USUARIO_SUPERVISOR_TELCEL)?"9":"12"?>">
-        <div class="panel-collapse collapse in show" id="exampleCollapseDefaultOne" aria-labelledby="exampleHeadingDefaultOne" role="tabpanel" aria-expanded="true">
-            <?php # echo $this->render('_search', ['model' => $searchModel]); ?>
-        </div>
-    </div>
-</div> -->
-
-    <div class="panel-table">
+<div class="panel-table">
         <?php
-        
+        require(__DIR__ . '/../components/select2.php');
         echo GridView::widget([
                 // 'tableOptions' => [
                 //     "class" => "table"

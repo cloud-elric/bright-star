@@ -190,7 +190,7 @@ class CitasController extends Controller
 
     public function actionValidarFechaEntrega($token=null){
         $respuesta = new ResponseServices();
-        if (\Yii::$app->user->can(Constantes::USUARIO_ADMINISTRADOR_TELCEL)) {
+        if (false) {
             $model = EntCitas::find()->where(['txt_token' => $token])->one();
 
             if($model->fch_entrega_equipo){
@@ -857,8 +857,16 @@ class CitasController extends Controller
         if (Yii::$app->request->isGet) :
             //The name of the CSV file that will be downloaded by the user.
         $fileName = 'Reporte.csv';
-        $data = [];
-        $data[0] = $this->setHeadersCsvT();
+        
+        $row = $this->setHeadersCsvT();
+
+        // Genera un archivo
+        $nameTemporal = Utils::generateToken("exp_").".csv";
+        $pathTemporal = "temporales/".$nameTemporal;
+
+        $df = fopen($pathTemporal, 'w');
+        fprintf($df, chr(0xEF).chr(0xBB).chr(0xBF));
+        fputcsv($df, $row);
         foreach ($dataProvider->getModels() as $key => $modelo) :
 
             $intentos = 0;
@@ -907,7 +915,7 @@ class CitasController extends Controller
             $cac = "CAC - ";
         }
 
-        $data[$modelo->id_cita] = [
+        $row = [
             $modelo->txt_identificador_cliente,
             $modelo->txt_telefono,
             $modelo->idEnvio ? $modelo->idEnvio->txt_tracking : '',
@@ -952,17 +960,12 @@ class CitasController extends Controller
 
         ];
 
-        $historico = [];
-
-
-        $data[$modelo->id_cita] = array_merge($data[$modelo->id_cita], $historico);
-
+    
+       // $data[$modelo->id_cita] = array_merge($data[$modelo->id_cita]);
+        fputcsv($df, $row);
         endforeach;
-
-            // print_r($historico);
-            // exit;
-            
-
+        fclose($df);
+           
             
             //Set the Content-Type and Content-Disposition headers.
 
@@ -970,14 +973,6 @@ class CitasController extends Controller
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
         header("Cache-Control: no-store, no-cache");
 
-        $nameTemporal = Utils::generateToken("exp_").".csv";
-        $pathTemporal = "temporales/".$nameTemporal;
-
-        $df = fopen($pathTemporal, 'w');
-        fprintf($df, chr(0xEF).chr(0xBB).chr(0xBF));
-        foreach ($data as $row) {
-            fputcsv($df, $row);
-        }
         readfile($pathTemporal);
         Files::borrarArchivo($pathTemporal);
         exit;
@@ -1089,6 +1084,8 @@ class CitasController extends Controller
         } else if ($modelo->b_entrega_cat) {
             $cac = "CAC - ";
         }
+
+        $modelo->validarDiaEntregaEnviador();
 
         $data[$modelo->id_cita] = [
             $modelo->txt_identificador_cliente,
@@ -1576,7 +1573,9 @@ class CitasController extends Controller
             $response->status = "success";
             $response->message = "Archivo guardado";
         } else {
+            print_r($archivo->error);
             $response->message = "No se pudo guardar el archivo";
+
         }
 
         return $response;
@@ -1661,4 +1660,27 @@ class CitasController extends Controller
 
         return $this->render('datos_mun');
     }
+
+    public function actionReporteArchivos(){
+        $citas = EntCitas::find()->all();
+
+        foreach($citas as $cita){
+            $hasEvidencia = EntEvidenciasCitas::find()->where(["id_cita"=>$cita->id_cita])->one();
+
+
+            $ubicacionArchivo = $cita->pathBaseEvidencia.$cita->txt_telefono.".pdf";
+                    
+            $token = false;
+            if(Files::existeArchivo($ubicacionArchivo)){
+                $token = true;
+            }else if($hasEvidencia){
+                $token = true;
+            }
+
+        }
+
+        echo ("('".$cita->txt_identificador_cliente."', '".($token?"Con evidencia":"Sin evidencia")."'),<br>");
+
+    }
+
 }
