@@ -79,7 +79,7 @@ $usuario = EntUsuarios::getUsuarioLogueado();
                       <li class="site-menu-item">
                         <a class="animsition-link" href="<?=Url::base()?>/codigo-postal-disponibilidad">
                           <span class="site-menu-title">
-                            <i class="site-menu-icon pe-7s-upload" aria-hidden="true"></i>
+                            <i class="site-menu-icon pe-7s-map-2" aria-hidden="true"></i>
                               Habilitar horarios C.P.
                           </span>
                         </a>
