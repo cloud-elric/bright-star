@@ -166,7 +166,7 @@ class CodigoPostalDisponibilidadController extends Controller
         }
 
         foreach($resultados as $model){
-            $response['results'][]=['id'=>$model->id_municipio, "txt_nombre"=>$model->txt_nombre];
+            $response['results'][]=['id'=>$model->id_area, "txt_nombre"=>$model->txt_nombre];
         }
     
         return $response;
