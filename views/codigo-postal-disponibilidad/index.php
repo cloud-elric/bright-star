@@ -39,10 +39,10 @@ $this->registerJsFile(
 require(__DIR__ . '/../components/select2.php');
 $url = Url::to(['codigo-postal-disponibilidad/buscar-municipio']);
 $selectMunicipio =  Select2::widget([
-  
+  'data'=>$municipios,
   'name'=>"EntCodigoPostalDisponibilidadSearch[id_municipio]",
   'options' => ['placeholder' => 'Ingresar Municipio', "class"=>"js-filtro-municipio"],
-  
+  'value'=>$searchModel->id_municipio,
   'pluginOptions' => [
       'language' => [
           'errorLoading' => new JsExpression("function () { return 'Error al cargar'; }"),
@@ -57,32 +57,13 @@ $selectMunicipio =  Select2::widget([
               }'),
       ],
       'allowClear' => true,
-      'minimumInputLength' => 1,
-      'ajax' => [
-          'url' => $url,
-          'dataType' => 'json',
-          'delay' => 250,
-          'data' => new JsExpression('function(params) { return {q:params.term, page: params.page}; }'),
-          'processResults' => new JsExpression($resultsJs),
-          'cache' => true
-      ],
-      'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-      'templateResult' => new JsExpression('function(equipo) { return equipo.txt_nombre; }'),
-      'templateSelection' => new JsExpression('function (equipo) { 
-          console.log(equipo);
-                  if(equipo.txt_nombre){
-                      return equipo.txt_nombre;
-                  }else{
-                      
-                      
-                  }
-      }'),
+      
   ],
 ]);
 
 $urlArea = Url::to(['codigo-postal-disponibilidad/buscar-area']);
 $selectArea =  Select2::widget([
-  
+  'data'=>$areas,
   'name'=>"EntCodigoPostalDisponibilidadSearch[id_area]",
   'options' => ['placeholder' => 'Ingresar area', "class"=>"js-filtro-area"],
   
@@ -100,26 +81,7 @@ $selectArea =  Select2::widget([
               }'),
       ],
       'allowClear' => true,
-      'minimumInputLength' => 1,
-      'ajax' => [
-          'url' => $urlArea,
-          'dataType' => 'json',
-          'delay' => 250,
-          'data' => new JsExpression('function(params) { return {q:params.term, page: params.page}; }'),
-          'processResults' => new JsExpression($resultsJs),
-          'cache' => true
-      ],
-      'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-      'templateResult' => new JsExpression('function(equipo) { return equipo.txt_nombre; }'),
-      'templateSelection' => new JsExpression('function (equipo) { 
-          console.log(equipo);
-                  if(equipo.txt_nombre){
-                      return equipo.txt_nombre;
-                  }else{
-                      
-                      
-                  }
-      }'),
+      
   ],
 ]);
 
@@ -152,6 +114,7 @@ $selectArea =  Select2::widget([
                   [
                     'attribute'=>'id_area', 
                     'filter'=>$selectArea,
+                    
                     'format'=>'raw',
                     'value'=>function($data){
                       return $data->idArea->txt_nombre;

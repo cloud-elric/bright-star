@@ -11,6 +11,8 @@ use yii\filters\VerbFilter;
 use app\models\CatMunicipios;
 use app\models\CatMunicipiosSearch;
 use app\models\CatAreasSearch;
+use app\models\CatAreas;
+use yii\helpers\ArrayHelper;
 
 /**
  * CodigoPostalDisponibilidadController implements the CRUD actions for EntCodigoPostalDisponibilidad model.
@@ -37,13 +39,21 @@ class CodigoPostalDisponibilidadController extends Controller
      * @return mixed
      */
     public function actionIndex()
-    {
+    {   
+        $areas= CatAreas::find()->where(["b_habilitado"=>1])->orderBy("txt_nombre")->all();
+        $areas = ArrayHelper::map($areas, "id_area", "txt_nombre");
+
+        $municipios = CatMunicipios::find()->orderBy("txt_nombre")->all();
+        $municipios = ArrayHelper::map($municipios, "id_municipio", "txt_nombre");
+
         $searchModel = new EntCodigoPostalDisponibilidadSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            "municipios"=>$municipios,
+            "areas"=>$areas
         ]);
     }
 
