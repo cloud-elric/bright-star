@@ -101,6 +101,11 @@ class LoginForm extends Model {
 		if (! $this->hasErrors ()) {
 			$user = $this->getUser ();
 
+			if(!$user){
+				$this->addError ( $attribute, 'Usuario o contraseña incorrectos.' );
+				return;
+			}
+
 			$isUsuarioBloqueado = EntUsuariosBloqueados::find()->where(['id_usuario'=>$user->id_usuario, "b_bloqueado"=>1])
 			->andWhere(["<=", new Expression("TIMESTAMPDIFF(MINUTE,fch_bloqueo,NOW())"), $this->minutosBloqueado])
 			->one();
